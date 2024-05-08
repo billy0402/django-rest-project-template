@@ -2,11 +2,15 @@
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
+
 [tool.poetry]
-name = "django-project"
+name = "django-rest-project-template"
 version = "0.1.0"
-description = "Django Project Template"
-authors = ["Arthur Chang <arthurc0102@gmail.com>"]
+description = "Django REST template."
+authors = [
+    "Arthur Chang <arthurc0102@gmail.com>",
+    "Billy Huang <10646003@ntub.edu.tw>",
+]
 readme = "README.md"
 
 [tool.poetry.dependencies]
