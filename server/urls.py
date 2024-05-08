@@ -19,8 +19,28 @@ Including another URLconf
 from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView,
+)
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.trailing_slash = ""
+
+api_urlpatterns = [
+    path("", include(router.urls)),
+]
 
 urlpatterns = [
+    # API
+    path("api/v1/", include((api_urlpatterns, "v1"))),
+    # API Docs
+    path("api/schema", SpectacularAPIView.as_view(), name="schema"),
+    path("api/swagger", SpectacularSwaggerView.as_view(), name="swagger"),
+    path("api/redoc", SpectacularRedocView.as_view(), name="redoc"),
+    # Admin
     path("admin/", admin.site.urls),
 ]
 
