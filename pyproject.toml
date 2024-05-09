@@ -40,6 +40,10 @@ pytest = "8.2.0"
 pytest-django = "4.8.0"
 nplusone = "1.0.0"
 
+[tool.poetry.group.deploy.dependencies]
+gunicorn = "22.0.0"
+whitenoise = "6.6.0"
+
 
 [tool.ruff]
 target-version = "py311"
