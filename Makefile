@@ -6,6 +6,8 @@ SHELL := bash
 MAKEFLAGS += --warn-undefined-variables
 MAKEFLAGS += --no-builtin-rules
 
+PROJECT_NAME=django-rest-project-template
+
 install:  ## Install dependences
 	poetry install
 .PHONY: install
@@ -39,7 +41,7 @@ clean:  ## Clean cache files
 .PHONY: clean
 
 build:  ## Build Docker image
-	echo "Build."
+	docker build -t $(PROJECT_NAME):$$(git rev-parse --short HEAD) -t $(PROJECT_NAME):$$(git rev-parse --abbrev-ref HEAD) -t $(PROJECT_NAME):latest .
 .PHONY: build
 
 dev-server: install  ## Run local develop server

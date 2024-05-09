@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -euo pipefail
+
+echo "Waiting for Database to start...."
+python manage.py shell < server/scripts/waiting_database.py
+
+echo "Collecting static files..."
+python manage.py collectstatic --noinput
+
+echo "Migrating Database"
+python manage.py migrate
+
+echo "Create admin user"
+python manage.py createsuperuser --noinput || true
+
+echo "Run server"
+gunicorn --bind=:8000 --workers=4 --forwarded-allow-ips="*" --timeout 300 server.wsgi

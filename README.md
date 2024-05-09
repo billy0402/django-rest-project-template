@@ -44,6 +44,12 @@ $ make typecheck
 $ make test
 ```
 
+## Build
+
+```shell
+$ make build
+```
+
 ## Bugs and suggestions
 
 If you have found a bug or have a request for additional functionality, please use the issue tracker on GitHub.
