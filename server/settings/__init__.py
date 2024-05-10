@@ -41,6 +41,8 @@ DEBUG: bool = env.bool("DEBUG", default=(ENV != "production"))
 
 ALLOWED_HOSTS: list[str] = env.list("ALLOWED_HOSTS", default=[])
 
+CORS_ALLOWED_ORIGINS: list[str] = env.list("CORS_ALLOWED_ORIGINS", default=[])
+
 
 # Application definition
 
@@ -55,6 +57,7 @@ DJANGO_APPS = [
 
 THIRD_PARTY_APPS = [
     "django_extensions",
+    "corsheaders",
     "rest_framework",
     "drf_spectacular",
 ]
@@ -69,6 +72,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
