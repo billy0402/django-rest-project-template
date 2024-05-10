@@ -31,6 +31,7 @@ router.trailing_slash = ""
 
 api_urlpatterns = [
     path("", include(router.urls)),
+    path("_/", include("server.app.common.urls")),
 ]
 
 urlpatterns = [

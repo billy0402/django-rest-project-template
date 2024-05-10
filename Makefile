@@ -14,7 +14,7 @@ install:  ## Install dependences
 
 test:  ## Run check and test
 	poetry run python manage.py check
-	poetry run pytest
+	poetry run python manage.py test
 .PHONY: test
 
 lint:  ## Check lint
