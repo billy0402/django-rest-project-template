@@ -248,13 +248,13 @@ django = ">=3.0"
 
 [[package]]
 name = "djangorestframework-types"
-version = "0.8.0"
+version = "0.7.1"
 description = "Type stubs for Django Rest Framework"
 optional = false
 python-versions = ">=3.7,<4.0"
 files = [
-    {file = "djangorestframework-types-0.8.0.tar.gz", hash = "sha256:bed5dc8ce4f3500a4d29632e333262059e2218f2291c88313ce8443c24e50a76"},
-    {file = "djangorestframework_types-0.8.0-py3-none-any.whl", hash = "sha256:5136212ec0df2c11d5ebcf217246f606e68f1d46a770419de84ed676bdab0113"},
+    {file = "djangorestframework-types-0.7.1.tar.gz", hash = "sha256:856cf7c5db4c3333dd933b71e13b4d897718e13d17c2668c86a64c0487fc16a6"},
+    {file = "djangorestframework_types-0.7.1-py3-none-any.whl", hash = "sha256:aaa11971f41a84da9660fabcd714003654614fce235f9a98bb0adb6362280547"},
 ]
 
 [[package]]
@@ -1214,4 +1214,4 @@ brotli = ["Brotli"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "c78f39f7066ac03b4cd46110ea9c04df8f33cebba351e7cd8ec7310d8813db90"
+content-hash = "5556501acbd771298928f7393d6c9a48af9b5bfc549370cca3ea20239bb9e453"
