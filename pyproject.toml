@@ -110,6 +110,7 @@ ignore = [
   # pydocstyle: Allow blank line after docstring
   "D202",
 ]
+exclude = ["**/migrations/*.py"]
 
 [tool.ruff.lint.flake8-tidy-imports]
 ban-relative-imports = "all"
@@ -122,6 +123,14 @@ banned-from = ["typing"]
 
 [tool.ruff.lint.flake8-import-conventions.extend-aliases]
 typing = "t"
+
+
+[tool.black]
+extend-exclude = '''
+/(
+  | migrations
+)/
+'''
 
 
 [tool.pyright]
