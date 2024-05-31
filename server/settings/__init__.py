@@ -139,7 +139,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# TODO: AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = "authentication.CustomUser"
 
 
 # Internationalization

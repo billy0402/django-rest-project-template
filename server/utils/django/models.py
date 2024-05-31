@@ -1,5 +1,6 @@
 import uuid
 
+from django.conf import settings
 from django.db import models
 
 
@@ -18,6 +19,22 @@ class TimestampModel(models.Model):
         abstract = True
 
 
-class BaseModel(UUIDModel, TimestampModel):
+class EditorModel(models.Model):
+    creator = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        related_name="creator",
+    )
+    editor = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        related_name="editor",
+    )
+
+    class Meta:
+        abstract = True
+
+
+class BaseModel(UUIDModel, TimestampModel, EditorModel):
     class Meta:
         abstract = True
