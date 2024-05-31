@@ -1,20 +1,18 @@
-from drf_spectacular.utils import extend_schema
-from rest_framework.decorators import api_view
-from rest_framework.request import Request
-from rest_framework.response import Response
+from drf_spectacular import utils as docs_utils
+from rest_framework import decorators, request, response
 
-from server.app.common.serializers import HealthSerializer, VersionSerializer
+from server.app.common import serializers as common_serializers
 
 
-@extend_schema(responses=HealthSerializer)
-@api_view(["GET"])
-def health(request: Request) -> Response:
+@docs_utils.extend_schema(responses=common_serializers.HealthSerializer)
+@decorators.api_view(["GET"])
+def health(request: request.Request) -> response.Response:
     """Get API health status."""
-    return Response({"status": True})
+    return response.Response({"status": True})
 
 
-@extend_schema(responses=VersionSerializer)
-@api_view(["GET"])
-def version(request: Request) -> Response:
+@docs_utils.extend_schema(responses=common_serializers.VersionSerializer)
+@decorators.api_view(["GET"])
+def version(request: request.Request) -> response.Response:
     """Get API version."""
-    return Response({"version": 1})
+    return response.Response({"version": 1})
