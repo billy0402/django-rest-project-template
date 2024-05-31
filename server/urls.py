@@ -27,6 +27,7 @@ router = routers.DefaultRouter(trailing_slash=False)
 api_urlpatterns = [
     path("", include(router.urls)),
     path("_/", include("server.app.common.urls")),
+    path("auth/", include("server.app.authentication.urls")),
 ]
 
 urlpatterns = [

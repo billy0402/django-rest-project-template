@@ -6,6 +6,7 @@ from server.app.common import serializers as common_serializers
 
 @docs_utils.extend_schema(responses=common_serializers.HealthSerializer)
 @decorators.api_view(["GET"])
+@decorators.permission_classes([])
 def health(request: request.Request) -> response.Response:
     """Get API health status."""
     return response.Response({"status": True})
@@ -13,6 +14,7 @@ def health(request: request.Request) -> response.Response:
 
 @docs_utils.extend_schema(responses=common_serializers.VersionSerializer)
 @decorators.api_view(["GET"])
+@decorators.permission_classes([])
 def version(request: request.Request) -> response.Response:
     """Get API version."""
     return response.Response({"version": 1})
