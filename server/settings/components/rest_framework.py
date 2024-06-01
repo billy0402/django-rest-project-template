@@ -8,5 +8,7 @@ REST_FRAMEWORK = {
         "rest_framework.filters.SearchFilter",
         "django_filters.rest_framework.DjangoFilterBackend",
     ],
+    "DEFAULT_PAGINATION_CLASS": "server.utils.pagination.PageNumberPagination",
+    "PAGE_SIZE": 10,
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
