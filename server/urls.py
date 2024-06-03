@@ -34,6 +34,7 @@ api_urlpatterns = [
 urlpatterns = [
     # API
     path("api/v1/", include((api_urlpatterns, "v1"))),
+    path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
     # API Docs
     path("api/schema.json", docs_views.SpectacularAPIView.as_view(), name="schema"),
     path("api/swagger", docs_views.SpectacularSwaggerView.as_view(), name="swagger"),
