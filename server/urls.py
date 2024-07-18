@@ -41,7 +41,11 @@ urlpatterns = [
     path("api/redoc", docs_views.SpectacularRedocView.as_view(), name="redoc"),
     # Admin
     path("admin/", admin.site.urls),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if url_prefix := getattr(settings, "URL_PREFIX", None):
     urlpatterns = [path(url_prefix, include(urlpatterns))]
