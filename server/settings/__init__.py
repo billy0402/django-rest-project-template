@@ -15,10 +15,15 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 import pathlib
 import sys
+import warnings
 
 import django_stubs_ext
 import environ
+from django.utils import deprecation
 from split_settings import tools as split_settings
+
+warnings.filterwarnings("ignore", category=deprecation.RemovedInDjango60Warning)  # pyright: ignore[reportAttributeAccessIssue]
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = pathlib.Path(__file__).resolve().parent.parent.parent
@@ -65,6 +70,8 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     "django_extensions",
     "corsheaders",
+    "ninja",
+    "ninja_extra",
 ]
 
 LOCAL_APPS = [
