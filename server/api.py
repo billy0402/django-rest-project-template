@@ -3,6 +3,7 @@ import typing as t
 from django.urls import URLResolver
 from ninja_extra import NinjaExtraAPI
 
+from server.app.authentication import views as auth_views
 from server.app.common.views import router as common_router
 
 api_docs_settings: dict[str, t.Any] = {
@@ -16,6 +17,7 @@ api = NinjaExtraAPI(
     urls_namespace="api-v1",
 )
 
+api.register_controllers(auth_views.AuthTokenController)
 api.add_router("_", common_router, tags=["common"])
 
 api_urls = t.cast(tuple[list[URLResolver], str, str], api.urls)

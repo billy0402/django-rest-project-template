@@ -66,6 +66,7 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "ninja",
     "ninja_extra",
+    "ninja_jwt",
 ]
 
 LOCAL_APPS = [
