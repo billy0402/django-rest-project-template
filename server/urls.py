@@ -20,25 +20,21 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
-from drf_spectacular import views as docs_views
-from rest_framework import routers
-
-router = routers.DefaultRouter(trailing_slash=False)
 
 api_urlpatterns = [
-    path("", include(router.urls)),
-    path("_/", include("server.app.common.urls")),
-    path("auth/", include("server.app.authentication.urls")),
+    # path("", include(router.urls)),
+    # path("_/", include("server.app.common.urls")),
+    # path("auth/", include("server.app.authentication.urls")),
 ]
 
 urlpatterns = [
     # API
-    path("api/v1/", include((api_urlpatterns, "v1"))),
-    path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
+    # path("api/v1/", include((api_urlpatterns, "v1"))),
+    # path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
     # API Docs
-    path("api/schema.json", docs_views.SpectacularAPIView.as_view(), name="schema"),
-    path("api/swagger", docs_views.SpectacularSwaggerView.as_view(), name="swagger"),
-    path("api/redoc", docs_views.SpectacularRedocView.as_view(), name="redoc"),
+    # path("api/schema.json", docs_views.SpectacularAPIView.as_view(), name="schema"),
+    # path("api/swagger", docs_views.SpectacularSwaggerView.as_view(), name="swagger"),
+    # path("api/redoc", docs_views.SpectacularRedocView.as_view(), name="redoc"),
     # Admin
     path("admin/", admin.site.urls),
 ]
