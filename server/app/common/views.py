@@ -1,20 +1,18 @@
-from drf_spectacular import utils as docs_utils
-from rest_framework import decorators, request, response
+from django import http
+from ninja import Router
 
-from server.app.common import serializers as common_serializers
+from server.app.common import schema as common_schema
+
+router = Router()
 
 
-@docs_utils.extend_schema(responses=common_serializers.HealthSerializer)
-@decorators.api_view(["GET"])
-@decorators.permission_classes([])
-def health(request: request.Request) -> response.Response:
+@router.get("/health", response=common_schema.HealthOut)
+def health(request: http.HttpRequest):
     """Get API health status."""
-    return response.Response({"status": True})
+    return {"status": True}
 
 
-@docs_utils.extend_schema(responses=common_serializers.VersionSerializer)
-@decorators.api_view(["GET"])
-@decorators.permission_classes([])
-def version(request: request.Request) -> response.Response:
+@router.get("/version", response=common_schema.VersionOut)
+def version(request: http.HttpRequest):
     """Get API version."""
-    return response.Response({"version": 1})
+    return {"version": 1}
