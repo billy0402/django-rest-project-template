@@ -15,6 +15,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 import pathlib
 
+import django_stubs_ext
 import environ
 from split_settings import tools as split_settings
 
@@ -26,6 +27,11 @@ env.prefix = "DJANGO_"
 
 if (env_file := BASE_DIR / "server" / "settings" / ".env").exists():
     env.read_env(env_file=env_file)
+
+
+# Monkeypatching Django, so stubs will work for all generics,
+# see: https://github.com/typeddjango/django-stubs
+django_stubs_ext.monkeypatch()
 
 
 # Quick-start development settings - unsuitable for production
