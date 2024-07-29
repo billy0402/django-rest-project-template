@@ -36,6 +36,7 @@ ruff = "0.4.3"
 black = "24.4.2"
 pyright = "1.1.362"
 django-types = "0.19.1"
+django-stubs-ext = "5.0.4"
 djangorestframework-types = "0.7.1"
 
 [tool.poetry.group.test.dependencies]
