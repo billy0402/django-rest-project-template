@@ -5,6 +5,7 @@ from ninja_extra import NinjaExtraAPI
 
 from server.app.authentication import views as auth_views
 from server.app.common.views import router as common_router
+from server.app.todo import views as todo_views
 
 api_docs_settings: dict[str, t.Any] = {
     "title": "Django REST project API",
@@ -18,6 +19,7 @@ api = NinjaExtraAPI(
 )
 
 api.register_controllers(auth_views.AuthTokenController)
+api.register_controllers(todo_views.TaskController)
 api.add_router("_", common_router, tags=["common"])
 
 api_urls = t.cast(tuple[list[URLResolver], str, str], api.urls)
