@@ -1,14 +1,18 @@
-version: "3"
+name: django_rest_project_template
+
+x-docker-defaults: &docker_defaults
+  restart: unless-stopped
 
 services:
   db:
-    image: postgres:16.2
+    <<: *docker_defaults
+    image: postgres:16.3
     environment:
       POSTGRES_HOST_AUTH_METHOD: trust
     volumes:
       - db_data:/var/lib/postgresql/data
     ports:
-      - "${DB_PORT:-5432}:5432"
+      - ${DB_PORT:-5432}:5432
 
 volumes:
   db_data:
