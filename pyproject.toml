@@ -60,53 +60,9 @@ gunicorn = "23.0.0"
 target-version = "py311"
 
 [tool.ruff.lint]
-select = [
-  # pyflakes
-  "F",
-  # pycodestyle
-  "E",
-  "W",
-  # pep8-naming
-  "N",
-  # pylint
-  "PL",
-  # mccabe
-  "C90",
-  # isort
-  "I",
-  # pydocstyle
-  "D",
-  # pyupgrade
-  "UP",
-  # flake8-builtins
-  "A",
-  # flake8-commas
-  "COM",
-  # flake8-bugbear
-  "B",
-  # flake8-comprehensions
-  "C4",
-  # flake8-type-checking
-  "TCH",
-  # flake8-datetimez
-  "DTZ",
-  # flake8-print
-  "T20",
-  # flake8-tidy-imports
-  "TID",
-  # flake8-simplify
-  "SIM",
-  # flake8-quotes
-  "Q",
-  # flake8-use-pathlib
-  "PTH",
-  # flake8-import-conventions
-  "ICN",
-  # flake8-django
-  "DJ",
-]
+select = ["ALL"]
 ignore = [
-  # pydocstyle: Do not require any docstring
+  # pydocstyle: Do not require any docstring.
   "D100",
   "D101",
   "D102",
@@ -117,10 +73,26 @@ ignore = [
   "D107",
   "D212",
   "D203",
-  # pydocstyle: Allow blank line after docstring
+  # pydocstyle: Allow blank line after docstring.
   "D202",
+  # flake8-pytest-style: Don't required leading underscore when fixture does not return anything.
+  "PT004",
+  # flake8-annotations: Don't required type annotation for self and cls.
+  "ANN101",
+  "ANN102",
+  # flake8-annotations: Allow function arguments are annotated with Any for args and kwargs.
+  "ANN401",
+  # flake8-unused-arguments: Keep function arguments in overriding django function definitions.
+  "ARG001",
+  "ARG002",
+  # Ignore rules for linter.
+  "COM812",
+  "ISC001",
 ]
-exclude = ["**/migrations/*.py"]
+exclude = ["server/**/migrations/*.py"]
+
+[tool.ruff.lint.per-file-ignores]
+"**/*test*" = ["S101"] # flake8-bandit: Allow using assert
 
 [tool.ruff.lint.flake8-tidy-imports]
 ban-relative-imports = "all"
@@ -131,26 +103,34 @@ convention = "google"
 [tool.ruff.lint.flake8-import-conventions]
 banned-from = ["typing"]
 
-[tool.ruff.lint.flake8-import-conventions.extend-aliases]
-typing = "t"
+[tool.ruff.lint.flake8-type-checking]
+strict = true
 
+[tool.ruff.lint.isort]
+split-on-trailing-comma = false
 
-[tool.black]
-extend-exclude = '''
-/(
-  | migrations
-)/
-'''
+[tool.ruff.format]
+# skip-magic-trailing-comma = true
+exclude = ["server/**/migrations/*.py"]
 
 
 [tool.pyright]
 pythonVersion = "3.11"
-typeCheckingMode = "strict"
+typeCheckingMode = "basic"
 reportUnnecessaryTypeIgnoreComment = true
-reportUnknownMemberType = false
 
 
 [tool.pytest.ini_options]
-addopts = "-vv"
+DJANGO_SETTINGS_MODULE = "server.settings"
+addopts = "-vv --cov=server --cov-report=html --cov-report=term-missing -p no:legacypath -x -n auto"
 python_files = ["tests.py", "test_*.py", "*_test.py"]
-filterwarnings = ["error"]
+filterwarnings = ["error", "ignore::DeprecationWarning"]
+
+
+[tool.coverage.run]
+branch = true
+concurrency = ["greenlet"]
+omit = ["server/**/migrations/*.py"]
+
+[tool.coverage.report]
+exclude_also = ["if typing.TYPE_CHECKING:", "@typing.overload"]

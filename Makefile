@@ -8,27 +8,36 @@ MAKEFLAGS += --no-builtin-rules
 
 PROJECT_NAME=django-rest-project-template
 
+init: env install  ## Init local develop
+	pre-commit install --install-hooks
+.PHONY: init
+
+env:  ## Setup develop
+	@[[ -f .env ]] || sed "s/!!!SECRET_KEY!!!/$$(make secret-key)/g" server/settings/.env.example > server/settings/.env
+	@echo '.env.example -> .env'
+.PHONY: env
+
 install:  ## Install dependences
-	poetry install
+	poetry install --sync
 .PHONY: install
 
 test:  ## Run check and test
 	poetry run python manage.py check
-	poetry run python manage.py test
+	poetry run pytest
 .PHONY: test
 
 lint:  ## Check lint
-	poetry run ruff check --diff .
-	poetry run black --check --diff .
+	poetry run ruff check .
+	poetry run ruff format --check .
 .PHONY: lint
 
 lint-fix:  ## Fix lint
 	poetry run ruff check --fix .
-	poetry run black .
+	poetry run ruff format .
 .PHONY: lint-fix
 
 typecheck:  ## Run typechecking
-	poetry run pyright .
+	PYRIGHT_PYTHON_IGNORE_WARNINGS=1 poetry run pyright .
 .PHONY: typecheck
 
 ci: lint typecheck test  ## Run all checks (lint, typecheck, test)
@@ -37,6 +46,8 @@ ci: lint typecheck test  ## Run all checks (lint, typecheck, test)
 clean:  ## Clean cache files
 	find . -name '__pycache__' -type d | xargs rm -rvf
 	find . -name '.pytest_cache' -type d | xargs rm -rvf
+	find . -name '.DS_Store' -type f | xargs rm -rvf
+	rm -rvf htmlcov .coverage
 	poetry run ruff clean
 .PHONY: clean
 
@@ -45,6 +56,10 @@ build:  ## Build Docker image
 .PHONY: build
 
 dev-server: install  ## Run local develop server
+	poetry run python manage.py runserver
+.PHONY: dev-server
+
+dev-server-plus: install  ## Run local develop server
 	poetry run python manage.py runserver_plus --print-sql
 .PHONY: dev-server
 

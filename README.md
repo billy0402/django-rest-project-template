@@ -4,28 +4,24 @@ My Django REST project template.
 
 ## Development environment
 
--   [macOS 12.7.2](https://www.apple.com/tw/macos/monterey/)
--   [Visual Studio Code 1.85.1](https://code.visualstudio.com/)
+-   [macOS 12.7.6](https://www.apple.com/tw/macos/monterey/)
+-   [Visual Studio Code 1.93.0](https://code.visualstudio.com/)
 -   [Python 3.11.7](https://www.python.org/)
--   [Django 5.0.6](https://www.djangoproject.com/)
--   [Django REST framework 3.15.1](https://www.django-rest-framework.org/)
+-   [Django 5.1.2](https://www.djangoproject.com/)
+-   [Django REST framework 3.15.2](https://www.django-rest-framework.org/)
+
+## Getting Started
+
+```shell
+$ make init
+
+$ make dev-server
+```
 
 ## Installation
 
 ```shell
 $ make install
-```
-
-## Getting Started
-
-```shell
-$ cp .devcontainer/.env.example .devcontainer/.env
-
-$ make dev-services-up
-
-$ cp server/settings/.env.example server/settings/.env
-
-$ make dev-server
 ```
 
 ## Lint
