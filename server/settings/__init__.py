@@ -40,14 +40,14 @@ django_stubs_ext.monkeypatch()
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY: str = env.str("SECRET_KEY")
 
-ENV: str = env.str("ENV", default="production")
+ENV: str = env.str("ENV", default="production")  # pyright: ignore[reportArgumentType]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG: bool = env.bool("DEBUG", default=(ENV != "production"))
+DEBUG: bool = env.bool("DEBUG", default=(ENV != "production"))  # pyright: ignore[reportArgumentType]
 
-ALLOWED_HOSTS: list[str] = env.list("ALLOWED_HOSTS", default=[])
+ALLOWED_HOSTS: list[str] = env.list("ALLOWED_HOSTS", default=[])  # pyright: ignore[reportArgumentType]
 
-CORS_ALLOWED_ORIGINS: list[str] = env.list("CORS_ALLOWED_ORIGINS", default=[])
+CORS_ALLOWED_ORIGINS: list[str] = env.list("CORS_ALLOWED_ORIGINS", default=[])  # pyright: ignore[reportArgumentType]
 
 
 # Application definition
@@ -86,11 +86,12 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "server.utils.django.middlewares.request_user.RequestUserMiddleware",
 ]
 
 ROOT_URLCONF = "server.urls"
 
-URL_PREFIX: str = env.str("URL_PREFIX", default="")
+URL_PREFIX: str = env.str("URL_PREFIX", default="")  # pyright: ignore[reportArgumentType]
 
 TEMPLATES = [
     {
@@ -119,7 +120,7 @@ WSGI_APPLICATION = "server.wsgi.application"
 DATABASES = {
     "default": env.db_url(
         "DATABASE_URL",
-        default="postgres://postgres@localhost:5432/postgres",
+        default="postgres://postgres@localhost:5432/postgres",  # pyright: ignore[reportArgumentType]
     ),
 }
 
@@ -146,7 +147,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTH_USER_MODEL = "authentication.CustomUser"
+AUTH_USER_MODEL = "authentication.User"
 
 
 # Internationalization

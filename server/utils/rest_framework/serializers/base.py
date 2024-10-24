@@ -1,12 +1,11 @@
-from django.contrib import auth
 from rest_framework import serializers
 
-User = auth.get_user_model()
+from server.app.authentication import models as auth_models
 
 
 class EditorSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = auth_models.UserModel
         fields = (
             "id",
             "username",
@@ -18,3 +17,9 @@ class EditorSerializer(serializers.ModelSerializer):
 class BaseSerializer(serializers.ModelSerializer):
     creator = EditorSerializer(read_only=True)
     editor = EditorSerializer(read_only=True)
+
+
+uuid_model_fields = ("id",)
+editor_model_fields = ("creator", "editor")
+timestamp_model_fields = ("created_at", "updated_at")
+base_model_fields = uuid_model_fields + editor_model_fields + timestamp_model_fields
