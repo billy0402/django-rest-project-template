@@ -28,9 +28,9 @@ class BaseViewSet(TypedGenericViewSet[Model], t.Generic[Model]):
         if self.action in ["list", "retrieve"]:
             serializer = self.get_serializer()
             fields: dict[str, t.Any] | None = getattr(serializer, "fields", None)
-            if fields and "creator" in fields:
-                queryset = queryset.select_related("creator")
-            if fields and "editor" in fields:
-                queryset = queryset.select_related("editor")
+            if fields and "created_by" in fields:
+                queryset = queryset.select_related("created_by")
+            if fields and "updated_by" in fields:
+                queryset = queryset.select_related("updated_by")
 
         return queryset

@@ -24,18 +24,18 @@ class TimestampModel(models.Model):
         abstract = True
 
 
-class EditorModel(models.Model):
-    creator = models.ForeignKey(
+class UserActionLogModel(models.Model):
+    created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
-        related_name="%(app_label)s_%(class)s_creator",
+        related_name="%(app_label)s_%(class)s_created_by",
         null=True,
         editable=False,
     )
-    editor = models.ForeignKey(
+    updated_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
-        related_name="%(app_label)s_%(class)s_editor",
+        related_name="%(app_label)s_%(class)s_updated_by",
         null=True,
         editable=False,
     )
@@ -44,7 +44,7 @@ class EditorModel(models.Model):
         abstract = True
 
 
-class BaseModel(UUIDModel, TimestampModel, EditorModel):
+class BaseModel(UUIDModel, TimestampModel, UserActionLogModel):
     class Meta:
         abstract = True
         ordering = ("-created_at",)

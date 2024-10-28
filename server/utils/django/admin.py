@@ -8,6 +8,10 @@ from django.utils.translation import gettext_lazy as _
 from server.utils.django.models import base as base_models
 
 
+class BaseAdmin(admin.ModelAdmin[base_models.BaseModel]):
+    readonly_fields = ("created_by", "updated_by")
+
+
 def delete_selected(
     modeladmin: admin.ModelAdmin[base_models.SoftDeletableModel],
     request: request.HttpRequest,
@@ -38,7 +42,3 @@ class SoftDeletableAdmin(admin.ModelAdmin[base_models.SoftDeletableModel]):
         if ordering:
             qs = qs.order_by(*ordering)
         return qs
-
-
-class BaseAdmin(admin.ModelAdmin[base_models.BaseModel]):
-    readonly_fields = ("creator", "editor")
