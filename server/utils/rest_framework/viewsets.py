@@ -3,8 +3,6 @@ import typing as t
 from django.db import models
 from rest_framework import generics, viewsets
 
-from server.typings import rest_framework as drft
-
 Model = t.TypeVar("Model", bound=models.Model)
 
 
@@ -24,8 +22,6 @@ class TypedGenericViewSet(
 
 
 class BaseViewSet(TypedGenericViewSet[Model], t.Generic[Model]):
-    request: drft.AuthenticatedRequest
-
     def get_queryset(self) -> models.QuerySet[Model]:
         queryset = super().get_queryset()
 

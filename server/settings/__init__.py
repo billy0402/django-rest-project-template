@@ -86,7 +86,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "server.utils.django.middlewares.request_user.RequestUserMiddleware",
 ]
 
 ROOT_URLCONF = "server.urls"
