@@ -14,6 +14,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 import pathlib
+import sys
 
 import django_stubs_ext
 import environ
@@ -40,7 +41,7 @@ django_stubs_ext.monkeypatch()
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY: str = env.str("SECRET_KEY")
 
-ENV: str = env.str("ENV", default="production")  # pyright: ignore[reportArgumentType]
+ENV: str = "test" if "pytest" in sys.modules else env.str("ENV", default="production")  # pyright: ignore[reportArgumentType]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG: bool = env.bool("DEBUG", default=(ENV != "production"))  # pyright: ignore[reportArgumentType]

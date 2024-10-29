@@ -58,7 +58,7 @@ class SoftDeletableModel(models.Model):
         db_index=True,
     )
 
-    all_objects = models.Manager()
+    all_objects = managers.GlobalManager()
     objects = managers.SoftDeletableManager()
 
     class Meta:

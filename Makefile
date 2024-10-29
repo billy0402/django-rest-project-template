@@ -23,7 +23,7 @@ install:  ## Install dependences
 
 test:  ## Run check and test
 	poetry run python manage.py check
-	poetry run pytest
+	poetry run pytest -p no:legacypath
 .PHONY: test
 
 lint:  ## Check lint
@@ -47,7 +47,7 @@ clean:  ## Clean cache files
 	find . -name '__pycache__' -type d | xargs rm -rvf
 	find . -name '.pytest_cache' -type d | xargs rm -rvf
 	find . -name '.DS_Store' -type f | xargs rm -rvf
-	rm -rvf htmlcov .coverage
+	rm -rvf htmlcov lcov.info .coverage
 	poetry run ruff clean
 .PHONY: clean
 

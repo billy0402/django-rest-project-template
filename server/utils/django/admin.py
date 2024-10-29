@@ -47,10 +47,7 @@ class SoftDeletableAdmin(admin.ModelAdmin[base_models.SoftDeletableModel]):
     def get_queryset(
         self, request: request.HttpRequest
     ) -> models.QuerySet[base_models.SoftDeletableModel]:
-        qs = t.cast(
-            models.QuerySet[base_models.SoftDeletableModel],
-            self.model.all_objects.get_queryset(),
-        )
+        qs = self.model.all_objects.get_queryset()
         ordering = self.get_ordering(request)
         if ordering:
             qs = qs.order_by(*ordering)
