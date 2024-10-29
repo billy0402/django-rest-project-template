@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from server.app.authentication import models as auth_models
+from server.utils.rest_framework import fields as util_fields
 
 
 class UserActionLogSerializer(serializers.ModelSerializer):
@@ -15,8 +16,14 @@ class UserActionLogSerializer(serializers.ModelSerializer):
 
 
 class BaseSerializer(serializers.ModelSerializer):
-    created_by = UserActionLogSerializer(read_only=True)
-    updated_by = UserActionLogSerializer(read_only=True)
+    created_by = UserActionLogSerializer(
+        default=util_fields.CurrentUserDefault(),
+        read_only=True,
+    )
+    updated_by = UserActionLogSerializer(
+        default=util_fields.CurrentUserDefault(),
+        read_only=True,
+    )
 
 
 uuid_model_fields = ("id",)

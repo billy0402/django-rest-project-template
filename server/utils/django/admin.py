@@ -1,5 +1,6 @@
 import typing as t
 
+from django import forms
 from django.contrib import admin
 from django.db import models
 from django.http import request
@@ -10,6 +11,18 @@ from server.utils.django.models import base as base_models
 
 class BaseAdmin(admin.ModelAdmin[base_models.BaseModel]):
     readonly_fields = ("created_by", "updated_by")
+
+    def save_model(
+        self,
+        request: request.HttpRequest,
+        obj: base_models.BaseModel,
+        form: forms.ModelForm,
+        change: bool,  # noqa: FBT001
+    ) -> None:
+        if not change:
+            obj.created_by = request.user
+        obj.updated_by = request.user
+        super().save_model(request, obj, form, change)
 
 
 def delete_selected(

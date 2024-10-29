@@ -1,7 +1,7 @@
 import typing as t
 
 from django.db import models
-from rest_framework import generics, viewsets
+from rest_framework import generics, serializers, viewsets
 
 Model = t.TypeVar("Model", bound=models.Model)
 
@@ -19,6 +19,14 @@ class TypedGenericViewSet(
     t.Generic[Model],
 ):
     pass
+
+
+class UserActionLogViewSet(viewsets.ModelViewSet):
+    def perform_create(self, serializer: serializers.BaseSerializer) -> None:
+        serializer.save(created_by=self.request.user, updated_by=self.request.user)
+
+    def perform_update(self, serializer: serializers.BaseSerializer) -> None:
+        serializer.save(updated_by=self.request.user)
 
 
 class BaseViewSet(TypedGenericViewSet[Model], t.Generic[Model]):
