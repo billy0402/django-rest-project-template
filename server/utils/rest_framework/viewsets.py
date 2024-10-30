@@ -37,3 +37,12 @@ class BaseGenericViewSet(t.Generic[Model, Serializer], viewsets.GenericViewSet):
                 queryset = queryset.select_related("updated_by")
 
         return queryset
+
+
+class BaseModelViewSet(
+    CreateUserActionLogMixin,
+    UpdateUserActionLogMixin,
+    BaseGenericViewSet[Model, Serializer],
+    viewsets.ModelViewSet,
+):
+    pass
