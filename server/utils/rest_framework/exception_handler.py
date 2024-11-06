@@ -2,6 +2,7 @@ import datetime
 import typing as t
 
 from django.conf import settings
+from django.http import Http404
 from django.utils import timezone
 from rest_framework import exceptions, views
 from rest_framework import response as drf_response
@@ -47,6 +48,9 @@ def custom_exception_handler(
         "timestamp": "2024-06-13T03:27:36.685027Z"
     }
     """
+    if isinstance(exception, Http404):
+        exception = exceptions.NotFound()
+
     response = views.exception_handler(exception, context)
 
     if response and isinstance(exception, exceptions.APIException):
