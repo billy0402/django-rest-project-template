@@ -8,9 +8,38 @@ from django.utils.translation import gettext_lazy as _
 
 from server.utils.django.models import base as base_models
 
+meta_fields = ("created_at", "updated_at", "created_by", "updated_by")
+meta_fields_set = set(meta_fields)
+
 
 class BaseAdmin(admin.ModelAdmin[base_models.BaseModel]):
-    readonly_fields = ("created_by", "updated_by")
+    def get_list_display(self, request: request.HttpRequest) -> t.Sequence[str]:
+        list_display = super().get_list_display(request)
+        return (*list_display, *meta_fields)
+
+    def get_readonly_fields(
+        self,
+        request: request.HttpRequest,
+        obj: base_models.BaseModel | None = None,
+    ) -> t.Sequence[t.Any]:
+        readonly_fields = super().get_readonly_fields(request, obj)
+        return (*meta_fields, *readonly_fields)
+
+    def get_fieldsets(
+        self,
+        request: request.HttpRequest,
+        obj: base_models.BaseModel | None = None,
+    ) -> list[tuple[str | None, dict[str, t.Any]]]:
+        fieldsets = super().get_fieldsets(request, obj)
+        if not self.fieldsets:
+            fields = super().get_fields(request, obj)
+            fields = [f for f in fields if f not in meta_fields_set]
+            fieldsets = [(None, {"fields": fields})]
+
+        return [
+            *fieldsets,
+            (_("Metadata"), {"fields": meta_fields}),
+        ]
 
     def save_model(
         self,

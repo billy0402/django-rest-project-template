@@ -28,16 +28,86 @@ def mock_request(admin_user: auth_models.User) -> http.HttpRequest:
     return request
 
 
+@pytest.mark.django_db
 class TestBaseAdmin:
-    def test_readonly_fields(self) -> None:
+    def test_get_list_display(self, mock_request: http.HttpRequest) -> None:
         base_admin = util_admin.BaseAdmin(
             model=test_models.MockModel,
             admin_site=admin.site,
         )
-        assert "created_by" in base_admin.readonly_fields
-        assert "updated_by" in base_admin.readonly_fields
 
-    @pytest.mark.django_db
+        list_display = base_admin.get_list_display(mock_request)
+
+        assert list_display == ("__str__", *util_admin.meta_fields)
+
+    def test_get_list_display_with_set_list_display(
+        self,
+        mock_request: http.HttpRequest,
+    ) -> None:
+        base_admin = util_admin.BaseAdmin(
+            model=test_models.MockModel,
+            admin_site=admin.site,
+        )
+        base_admin.list_display = ("id", "name")
+
+        list_display = base_admin.get_list_display(mock_request)
+
+        assert list_display == ("id", "name", *util_admin.meta_fields)
+
+    def test_get_readonly_fields(self, mock_request: http.HttpRequest) -> None:
+        base_admin = util_admin.BaseAdmin(
+            model=test_models.MockModel,
+            admin_site=admin.site,
+        )
+
+        readonly_fields = base_admin.get_readonly_fields(mock_request)
+
+        assert readonly_fields == util_admin.meta_fields
+
+    def test_get_readonly_fields_with_set_readonly_fields(
+        self,
+        mock_request: http.HttpRequest,
+    ) -> None:
+        base_admin = util_admin.BaseAdmin(
+            model=test_models.MockModel,
+            admin_site=admin.site,
+        )
+        base_admin.readonly_fields = ("id", "name")
+
+        readonly_fields = base_admin.get_readonly_fields(mock_request)
+
+        assert readonly_fields == (*util_admin.meta_fields, "id", "name")
+
+    def test_get_fieldsets(self, mock_request: http.HttpRequest) -> None:
+        base_admin = util_admin.BaseAdmin(
+            model=test_models.MockModel,
+            admin_site=admin.site,
+        )
+
+        fieldsets = base_admin.get_fieldsets(mock_request)
+
+        assert fieldsets == [
+            (None, {"fields": ["name"]}),
+            ("Metadata", {"fields": util_admin.meta_fields}),
+        ]
+
+    def test_get_fieldsets_with_set_fieldsets(
+        self,
+        mock_request: http.HttpRequest,
+    ) -> None:
+        base_admin = util_admin.BaseAdmin(
+            model=test_models.MockModel,
+            admin_site=admin.site,
+        )
+        base_admin.fieldsets = (("Main", {"fields": ("id", "name")}),)
+
+        fieldsets = base_admin.get_fieldsets(mock_request)
+
+        assert fieldsets == [
+            ("Main", {"fields": ("id", "name")}),
+            ("Metadata", {"fields": util_admin.meta_fields}),
+        ]
+
     def test_save_model_on_create(
         self,
         mock_request: http.HttpRequest,
@@ -55,7 +125,6 @@ class TestBaseAdmin:
         assert obj.created_by == admin_user
         assert obj.updated_by == admin_user
 
-    @pytest.mark.django_db
     def test_save_model_on_update(
         self,
         mock_request: http.HttpRequest,
