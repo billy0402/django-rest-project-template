@@ -78,6 +78,7 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "server.app.common",
     "server.app.authentication",
+    "server.app.chat",
 ]
 
 INSTALLED_APPS = BEFORE_DJANGO_APPS + DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
