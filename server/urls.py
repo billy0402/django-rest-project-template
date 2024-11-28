@@ -39,6 +39,8 @@ urlpatterns = [
     path("api/schema.json", docs_views.SpectacularAPIView.as_view(), name="schema"),
     path("api/swagger", docs_views.SpectacularSwaggerView.as_view(), name="swagger"),
     path("api/redoc", docs_views.SpectacularRedocView.as_view(), name="redoc"),
+    # Web Socket
+    path("chat/", include("server.app.chat.urls")),
     # Admin
     path("admin/", admin.site.urls),
 ]
