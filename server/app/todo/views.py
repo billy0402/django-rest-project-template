@@ -1,6 +1,9 @@
+import uuid
+
+import ninja
 from django.db import models
-from django.shortcuts import get_object_or_404
 from ninja_extra import (
+    ControllerBase,
     api_controller,
     http_delete,
     http_get,
@@ -8,86 +11,58 @@ from ninja_extra import (
     http_post,
     http_put,
     paginate,
+    status,
 )
-from ninja_jwt.authentication import JWTAuth
 
 from server.app.todo import models as todo_models
+from server.app.todo import repositories as todo_repositories
 from server.app.todo import schema as todo_schema
-from server.repositories import base as base_repository
 from server.utils.ninja import pagination
 
 
 @api_controller("/todo/tasks", tags=["todo"])
-class TaskController:
-    repository = base_repository.BaseRepository(todo_models.Task)
-
-    @http_get(
-        "",
-        response=pagination.PaginationOut[todo_schema.Task],
+class TaskController(ControllerBase):
+    repository = todo_repositories.TaskRepository(
+        field_mappings={"tag_ids": "tags"},
     )
+
+    @http_get("", response=pagination.PaginationOut[todo_schema.Task])
     @paginate()
     def list(self) -> models.QuerySet[todo_models.Task]:
         return self.repository.get_all(
-            select_related=["category", "creator"],
-            prefetch_related=["tags"],
-        )
-        query_set = todo_models.Task.objects.select_related(
-            "category",
-            "creator",
-        ).prefetch_related("tags")
-        return query_set  # noqa: RET504
-
-    @http_get(
-        "/{id_}",
-        response=todo_schema.Task,
-    )
-    def retrieve(self, id_: int) -> todo_models.Task | None:
-        return self.repository.get_by_id(
-            id_,
-            select_related=["category", "creator"],
+            select_related=["category", "created_by", "updated_by"],
             prefetch_related=["tags"],
         )
 
-    @http_post(
-        "",
-        response=todo_schema.Task,
-        auth=JWTAuth(),
-    )
-    def create(self, payload: todo_schema.TaskCreate) -> todo_models.Task:
-        user = self.context.request.auth  # pyright: ignore[reportAttributeAccessIssue]
-        data = payload.dict(exclude={"tag_ids"})
-        data["creator"] = user
-        task = todo_models.Task.objects.create(**data)
-        if payload.tag_ids:
-            task.tags.set(payload.tag_ids)  # pyright: ignore[reportArgumentType]
-        return task
+    @http_get("/{id_}", response=todo_schema.Task)
+    def retrieve(self, id_: uuid.UUID) -> todo_models.Task:
+        return self.repository.get_by_id(id_)
+
+    @http_post("", response={status.HTTP_201_CREATED: todo_schema.Task})
+    def create(self, payload: todo_schema.TaskCreate) -> tuple[int, todo_models.Task]:
+        data = payload.dict()
+        request_user = self.context.request.user  # pyright: ignore[reportOptionalMemberAccess]
+        data["created_by"] = request_user
+        data["updated_by"] = request_user
+        return status.HTTP_201_CREATED, self.repository.create(data)
 
     @http_put("/{id_}", response=todo_schema.Task)
-    def update(self, id_: int, payload: todo_schema.TaskUpdate) -> todo_models.Task:
-        task = get_object_or_404(todo_models.Task, id=id_)
-        for attr, value in payload.dict(exclude_unset=True).items():
-            setattr(task, attr, value)
-        task.save()
-        if "tag_ids" in payload.dict(exclude_unset=True):
-            task.tags.set(payload.tag_ids)  # pyright: ignore[reportArgumentType]
-        return task
+    def update(
+        self,
+        id_: uuid.UUID,
+        payload: todo_schema.TaskCreate,
+    ) -> todo_models.Task:
+        return self.repository.update(id_, payload.dict())
 
     @http_patch("/{id_}", response=todo_schema.Task)
     def partial_update(
         self,
-        id_: int,
-        payload: todo_schema.TaskUpdate,
+        id_: uuid.UUID,
+        payload: ninja.PatchDict[todo_schema.TaskCreate],  # pyright: ignore[reportInvalidTypeArguments]
     ) -> todo_models.Task:
-        task = get_object_or_404(todo_models.Task, id=id_)
-        for attr, value in payload.dict(exclude_unset=True).items():
-            setattr(task, attr, value)
-        task.save()
-        if "tag_ids" in payload.dict(exclude_unset=True):
-            task.tags.set(payload.tag_ids)  # pyright: ignore[reportArgumentType]
-        return task
+        return self.repository.update(id_, payload)
 
-    @http_delete("/{id_}", response=None)
-    def delete_task(self, id_: int) -> tuple[int, None]:
-        data = get_object_or_404(todo_models.Task, id=id_)
-        data.delete()
-        return 204, None
+    @http_delete("/{id_}", response={status.HTTP_204_NO_CONTENT: None})
+    def delete_task(self, id_: uuid.UUID) -> tuple[int, None]:
+        self.repository.delete(id_)
+        return status.HTTP_204_NO_CONTENT, None

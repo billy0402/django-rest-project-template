@@ -1,64 +1,37 @@
-# Pydantic Schemas
-
 import datetime
-import uuid
+import typing as t
 
-from ninja import Schema
+import pydantic
+from ninja import schema
 
-
-class User(Schema):
-    id: uuid.UUID
-    username: str
-    email: str
-    first_name: str
-    last_name: str
-    is_active: bool
-    is_staff: bool
-    is_superuser: bool
-    last_login: datetime.datetime
-    date_joined: datetime.datetime
+from server.utils.ninja.schema import mixins as schema_mixins
 
 
-class Tag(Schema):
-    id: int
-    name: str
-    description: str | None = None
-
-
-class Category(Schema):
-    id: int
+class Tag(schema.Schema):
+    id: pydantic.UUID4
     name: str
 
 
-class Task(Schema):
-    id: int
+class Category(schema.Schema):
+    id: pydantic.UUID4
+    name: str
+
+
+class Task(schema_mixins.BaseMixin):
     title: str
-    description: str | None = None
+    description: str | None
     is_finish: bool
     tags: list[Tag]
-    category: Category
-    attachment: str | None = None  # Assuming it will be a URL
-    end_at: str | None = None  # ISO 8601 format datetime string
-    creator: User
-    created_at: datetime.datetime
-    updated_at: datetime.datetime
-
-
-class TaskCreate(Schema):
-    title: str
-    description: str | None = None
-    is_finish: bool | None = False
-    tag_ids: list[int]  # list of Tag IDs
-    category_id: int  # Category ID
+    category: Category | None = None
     attachment: str | None = None
-    end_at: str | None = None
+    end_at: datetime.datetime | None = None
 
 
-class TaskUpdate(Schema):
-    title: str | None = None
-    description: str | None = None
-    is_finish: bool | None = None
-    tag_ids: list[int] | None = None
-    category_id: int | None = None
+class TaskCreate(schema.Schema):
+    title: str = schema.Field(min_length=1)
+    description: str = ""
+    is_finish: bool | None = False
+    tag_ids: t.ClassVar[list[pydantic.UUID4]] = []
+    category_id: pydantic.UUID4 | None = None
     attachment: str | None = None
     end_at: str | None = None
