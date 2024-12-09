@@ -20,7 +20,7 @@ class CustomPagination(pagination.PageNumberPaginationExtra):
     page_size_query_param = "limit"
     max_page_size = 1000
 
-    class Output(Schema, t.Generic[T]):  # type: ignore
+    class Output(Schema, t.Generic[T]):
         count: int
         limit: int
         page: int
