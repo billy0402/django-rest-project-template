@@ -1,22 +1,24 @@
-from ninja_extra import api_controller, http_post
-from ninja_jwt import controller as jwt_controller
-from ninja_jwt.controller import schema as jwt_schema
-
-from server.app.authentication import schema as auth_schema
+from ninja_extra import ControllerBase, api_controller, http_post
+from ninja_jwt import controller as jwt_contollers
+from ninja_jwt import schema as jwt_schema
 
 
 @api_controller("/auth", tags=["auth"])
-class AuthTokenController(jwt_controller.NinjaJWTDefaultController):  # pyright: ignore[reportGeneralTypeIssues]
+class AuthTokenController(
+    jwt_contollers.TokenVerificationController,
+    jwt_contollers.TokenObtainPairController,
+    ControllerBase,
+):
     """custom path prefix."""
 
     @http_post(
         "/obtain",
-        response=auth_schema.TokenObtainPairOutputSchema,
-        url_name="token_obtain_pair",
-        operation_id="token_obtain_pair",
+        response=jwt_schema.TokenObtainPairOutputSchema,
+        url_name="token_obtain",
+        operation_id="token_obtain",
     )
     def obtain_token(
         self,
-        user_token: jwt_schema.obtain_pair_schema,  # pyright: ignore[reportInvalidTypeForm]
-    ) -> auth_schema.TokenObtainPairOutputSchema:
+        user_token: jwt_schema.TokenObtainPairInputSchema,
+    ) -> jwt_schema.TokenObtainPairOutputSchema:
         return super().obtain_token(user_token)

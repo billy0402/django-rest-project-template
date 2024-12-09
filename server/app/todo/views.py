@@ -1,6 +1,7 @@
 from django.db import models
 from django.shortcuts import get_object_or_404
 from ninja_extra import (
+    ControllerBase,
     api_controller,
     http_delete,
     http_get,
@@ -9,17 +10,17 @@ from ninja_extra import (
     http_put,
     paginate,
 )
-from ninja_jwt.authentication import JWTAuth
+from ninja_jwt import authentication as auth
 
 from server.app.todo import models as todo_models
+from server.app.todo import repositories as todo_repositories
 from server.app.todo import schema as todo_schema
-from server.repositories import base as base_repository
 from server.utils.ninja import pagination
 
 
 @api_controller("/todo/tasks", tags=["todo"])
-class TaskController:
-    repository = base_repository.BaseRepository(todo_models.Task)
+class TaskController(ControllerBase):
+    repository = todo_repositories.TaskRepository()
 
     @http_get(
         "",
@@ -51,12 +52,11 @@ class TaskController:
     @http_post(
         "",
         response=todo_schema.Task,
-        auth=JWTAuth(),
+        auth=auth.JWTAuth(),
     )
     def create(self, payload: todo_schema.TaskCreate) -> todo_models.Task:
-        user = self.context.request.auth  # pyright: ignore[reportAttributeAccessIssue]
         data = payload.dict(exclude={"tag_ids"})
-        data["creator"] = user
+        data["creator"] = self.auth
         task = todo_models.Task.objects.create(**data)
         if payload.tag_ids:
             task.tags.set(payload.tag_ids)  # pyright: ignore[reportArgumentType]

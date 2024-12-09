@@ -9,9 +9,6 @@ Model = t.TypeVar("Model", bound=models.Model)
 class BaseRepository(t.Generic[Model]):
     model: type[Model]
 
-    def __init__(self, model: type[Model]) -> None:
-        self.model = model
-
     def get_all(
         self,
         select_related: list[str] | None = None,
