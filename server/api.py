@@ -1,6 +1,6 @@
 import typing as t
 
-from django.urls import URLResolver
+from django import urls
 from ninja_extra import NinjaExtraAPI
 
 from server.app.authentication import views as auth_views
@@ -25,4 +25,4 @@ api.register_controllers(auth_views.AuthTokenController)
 api.register_controllers(todo_views.TaskController)
 api.add_router("_", common_router, tags=["common"])
 
-api_urls = t.cast(tuple[list[URLResolver], str, str], api.urls)
+api_urls = t.cast(tuple[list[urls.URLResolver], str, str], api.urls)

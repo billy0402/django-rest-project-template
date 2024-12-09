@@ -74,7 +74,7 @@ def custom_exception_handler(
     return response.JsonResponse(data.dict(), status=data.status_code)
 
 
-def register_exception_handler(app: NinjaExtraAPI):
+def register_exception_handler(app: NinjaExtraAPI) -> None:
     app.add_exception_handler(e.AuthenticationError, custom_exception_handler)  # 400
     app.add_exception_handler(e.ValidationError, custom_exception_handler)  # 401
     app.add_exception_handler(http.Http404, custom_exception_handler)  # 404

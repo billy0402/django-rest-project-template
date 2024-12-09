@@ -7,12 +7,12 @@ router = Router()
 
 
 @router.get("/health", response=common_schema.HealthOut)
-def health(request: http.HttpRequest):
+def health(request: http.HttpRequest) -> dict:
     """Get API health status."""
     return {"status": True}
 
 
 @router.get("/version", response=common_schema.VersionOut)
-def version(request: http.HttpRequest):
+def version(request: http.HttpRequest) -> dict:
     """Get API version."""
     return {"version": 1}
