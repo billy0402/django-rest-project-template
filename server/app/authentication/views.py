@@ -4,7 +4,7 @@ from ninja_jwt import controller as jwt_contollers
 from server.app.authentication import schema as auth_schema
 
 
-@api_controller("/auth", tags=["auth"])
+@api_controller("/auth", tags=["auth"], auth=None)
 class AuthTokenController(
     jwt_contollers.TokenVerificationController,
     jwt_contollers.TokenObtainPairController,

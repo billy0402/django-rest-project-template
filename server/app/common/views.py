@@ -6,13 +6,13 @@ from server.app.common import schema as common_schema
 router = Router()
 
 
-@router.get("/health", response=common_schema.HealthOut)
+@router.get("/health", response=common_schema.HealthOut, auth=None)
 def health(request: http.HttpRequest) -> dict:
     """Get API health status."""
     return {"status": True}
 
 
-@router.get("/version", response=common_schema.VersionOut)
+@router.get("/version", response=common_schema.VersionOut, auth=None)
 def version(request: http.HttpRequest) -> dict:
     """Get API version."""
     return {"version": 1}

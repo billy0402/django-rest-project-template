@@ -2,6 +2,7 @@ import typing as t
 
 from django import urls
 from ninja_extra import NinjaExtraAPI
+from ninja_jwt import authentication as jwt_auth
 
 from server.app.authentication import views as auth_views
 from server.app.common.views import router as common_router
@@ -17,6 +18,7 @@ api = NinjaExtraAPI(
     **api_docs_settings,
     version="1.0.0",
     urls_namespace="api-v1",
+    auth=jwt_auth.JWTAuth(),
 )
 
 exception_handler.register_exception_handler(api)
