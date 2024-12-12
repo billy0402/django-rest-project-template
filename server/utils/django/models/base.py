@@ -9,22 +9,33 @@ from server.utils.django import fields as util_fields
 from server.utils.django import managers
 
 
-class UUIDModel(models.Model):
+class UUIDPrimaryKeyMixin(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     class Meta:
         abstract = True
 
 
-class TimestampModel(models.Model):
+class CreatedTimestampMixin(models.Model):
     created_at = util_fields.CreatedAtField()
+
+    class Meta:
+        abstract = True
+
+
+class UpdatedTimestampMixin(models.Model):
     updated_at = util_fields.UpdatedAtField()
 
     class Meta:
         abstract = True
 
 
-class UserActionLogModel(models.Model):
+class TimestampMixin(CreatedTimestampMixin, UpdatedTimestampMixin):
+    class Meta:
+        abstract = True
+
+
+class CreatedActionLogMixin(models.Model):
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
@@ -32,6 +43,12 @@ class UserActionLogModel(models.Model):
         null=True,
         editable=False,
     )
+
+    class Meta:
+        abstract = True
+
+
+class UpdatedActionLogMixin(models.Model):
     updated_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
@@ -44,7 +61,12 @@ class UserActionLogModel(models.Model):
         abstract = True
 
 
-class BaseModel(UUIDModel, TimestampModel, UserActionLogModel):
+class UserActionLogMixin(CreatedActionLogMixin, UpdatedActionLogMixin):
+    class Meta:
+        abstract = True
+
+
+class BaseModel(UUIDPrimaryKeyMixin, TimestampMixin, UserActionLogMixin):
     class Meta:
         abstract = True
         ordering = ("-created_at",)

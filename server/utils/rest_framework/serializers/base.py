@@ -26,7 +26,7 @@ class BaseSerializer(serializers.ModelSerializer):
     )
 
 
-uuid_model_fields = ("id",)
-user_action_log_fields = ("created_by", "updated_by")
+uuid_primary_key_fields = ("id",)
 timestamp_fields = ("created_at", "updated_at")
-base_model_fields = uuid_model_fields + user_action_log_fields + timestamp_fields
+user_action_log_fields = ("created_by", "updated_by")
+base_model_fields = uuid_primary_key_fields + timestamp_fields + user_action_log_fields

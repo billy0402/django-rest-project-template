@@ -123,5 +123,5 @@ class TestBaseSerializer:
 
 class TestBaseModelFields:
     def test_base_model_fields(self) -> None:
-        expected_fields = ("id", "created_by", "updated_by", "created_at", "updated_at")
+        expected_fields = ("id", "created_at", "updated_at", "created_by", "updated_by")
         assert set(base_serializers.base_model_fields) == set(expected_fields)

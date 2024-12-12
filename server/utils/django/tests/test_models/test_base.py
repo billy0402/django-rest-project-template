@@ -11,14 +11,15 @@ from server.utils.django.tests import models as test_models
 
 
 @pytest.mark.django_db
-class TestUUIDModel:
-    def test_id_is_uuid(self) -> None:
+class TestUUIDPrimaryKeyMixin:
+    def test_pk_is_uuid(self) -> None:
         obj = baker.make(test_models.MockModel)
+        assert isinstance(obj.pk, uuid.UUID)
         assert isinstance(obj.id, uuid.UUID)
 
 
 @pytest.mark.django_db
-class TestTimestampModel:
+class TestTimestampMixin:
     def test_set_timestamp_on_create(self) -> None:
         with time_machine.travel("2024-01-01 12:00:00"):
             obj = baker.make(test_models.MockModel)
@@ -47,7 +48,7 @@ class TestTimestampModel:
 
 
 @pytest.mark.django_db
-class TestUserActionLogModel:
+class TestUserActionLogMixin:
     def test_created_by_nullable(self) -> None:
         obj = baker.make(test_models.MockModel, created_by=None)
         assert obj.created_by is None
