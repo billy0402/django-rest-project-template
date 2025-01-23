@@ -10,10 +10,11 @@ PROJECT_NAME=django-rest-project-template
 
 init: env install  ## Init local develop
 	pre-commit install --install-hooks
+	docker compose up -d
 .PHONY: init
 
 env:  ## Setup develop
-	@[[ -f .env ]] || sed "s/!!!SECRET_KEY!!!/$$(make secret-key)/g" server/settings/.env.example > server/settings/.env
+	@[[ -f server/settings/.env ]] || sed "s/!!!SECRET_KEY!!!/$$(make secret-key)/g" server/settings/.env.example > server/settings/.env
 	@echo '.env.example -> .env'
 .PHONY: env
 
@@ -21,10 +22,17 @@ install:  ## Install dependences
 	poetry install --sync
 .PHONY: install
 
-test:  ## Run check and test
-	poetry run python manage.py check
-	poetry run pytest -p no:legacypath
+test:  ## Run test with coverage
+	poetry run pytest --cov=server --cov-report=html --cov-report=term-missing --cov-report=lcov:lcov.info -n auto
 .PHONY: test
+
+test-no-cov:  ## Run test without coverage
+	poetry run pytest --no-cov -x -n=auto
+.PHONY: test-no-cov
+
+test-only:  ## Run test with only
+	poetry run pytest --no-cov -x -s -m=only
+.PHONY: test-no-cov
 
 lint:  ## Check lint
 	poetry run ruff check .
@@ -66,18 +74,6 @@ dev-server-plus: install  ## Run local develop server
 secret-key:  ## Generate secret key
 	@openssl rand -hex 32
 .PHONY: secret-key
-
-dev-services-up:  ## Start servers for local dev
-	@docker compose -f .devcontainer/docker-compose.yml up -d
-.PHONY: dev-services-up
-
-dev-services-down:  ## Stop servers for local dev
-	@docker compose -f .devcontainer/docker-compose.yml down
-.PHONY: dev-services-down
-
-dev-services-with:  ## Run docker compose with args
-	docker compose -f .devcontainer/docker-compose.yml $(args)
-.PHONY: dev-services-with
 
 .DEFAULT_GOAL := help
 help: Makefile

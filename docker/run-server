@@ -5,11 +5,11 @@ set -euo pipefail
 echo "Waiting for Database to start...."
 python manage.py shell < server/scripts/waiting_database.py
 
-echo "Collecting static files..."
-python manage.py collectstatic --noinput
-
 echo "Migrating Database"
 python manage.py migrate
+
+echo "Collecting static files..."
+python manage.py collectstatic --noinput
 
 echo "Create admin user"
 python manage.py createsuperuser --noinput || true

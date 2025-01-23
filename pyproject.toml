@@ -124,9 +124,10 @@ reportUnnecessaryTypeIgnoreComment = true
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "server.settings"
-addopts = "-vv --reuse-db --nomigrations --cov=server --cov-report=html --cov-report=term-missing --cov-report=lcov:lcov.info -x -n auto"
+addopts = "-vv --reuse-db --nomigrations"
 python_files = ["tests.py", "test_*.py", "*_test.py"]
 filterwarnings = ["error", "ignore::DeprecationWarning"]
+markers = ["only"]
 
 
 [tool.coverage.run]
